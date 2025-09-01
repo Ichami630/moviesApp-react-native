@@ -37,7 +37,7 @@ const _layout = () => {
         backgroundColor: "#0f0D23",
         borderRadius: 50,
         height: 52,
-        marginBottom: 16,
+        marginBottom: 20,
         marginHorizontal: 16,
         overflow: "hidden",
         borderWidth: 1,
