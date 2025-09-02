@@ -7,6 +7,13 @@ export const TMDB_CONFIG = {
     }
 }
 
+export const API_CONFIG = {
+    BASE_URL: 'http://192.168.43.195:8085',
+    headers: {
+        accept: 'application/json',
+    }
+}
+
 export const fetchMovies = async ({query}: {query: string}) => {
     const endpoint = query ? `/search/movie?query=${encodeURIComponent(query)}`: '/discover/movie?sort_by=popularity.desc'
     try {
@@ -18,5 +25,18 @@ export const fetchMovies = async ({query}: {query: string}) => {
         return data.results;
     } catch (error) {
         console.log('Error fetching movies', error);
+    }
+}
+
+export const testApi = async () => {
+    try {
+        const res = await fetch(`${API_CONFIG.BASE_URL}/healthcheck`,{
+            method: 'GET',
+            headers: API_CONFIG.headers
+        })
+        const data = await res.json();
+        return data;
+    } catch (error) {
+        console.log(error)
     }
 }

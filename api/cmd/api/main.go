@@ -87,10 +87,10 @@ func run() error {
 	handler := api.NewMessageHandler(querier, campay, cloudinary).WireHttpHandler()
 
 	// Wrap the handler with CORS middleware
-	handlerWithCORS := corsMiddleware(handler)
+	// handlerWithCORS := corsMiddleware(handler)
 
 	// And finally we start the HTTP server on the configured port.
-	err = http.ListenAndServe(fmt.Sprintf(":%d", config.ListenPort), handlerWithCORS)
+	err = http.ListenAndServe(fmt.Sprintf(":%d", config.ListenPort), handler)
 	if err != nil {
 		fmt.Println("Error starting server:", err)
 	}
@@ -141,21 +141,21 @@ func getPostgresConnectionURL(config DBConfig) string {
 
 // cors middleware
 // corsMiddleware adds CORS headers to responses
-func corsMiddleware(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		origin := r.Header.Get("Origin")
-		if origin == "http://localhost:3000" || origin == "https://linkauto.xyz" {
-			w.Header().Set("Access-Control-Allow-Origin", origin)
-		}
+// func corsMiddleware(next http.Handler) http.Handler {
+// 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+// 		origin := r.Header.Get("Origin")
+// 		if origin == "http://localhost:3000" || origin == "https://linkauto.xyz" {
+// 			w.Header().Set("Access-Control-Allow-Origin", origin)
+// 		}
 
-		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH, OPTIONS")
-		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+// 		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH, OPTIONS")
+// 		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
 
-		if r.Method == "OPTIONS" {
-			w.WriteHeader(http.StatusOK)
-			return
-		}
+// 		if r.Method == "OPTIONS" {
+// 			w.WriteHeader(http.StatusOK)
+// 			return
+// 		}
 
-		next.ServeHTTP(w, r)
-	})
-}
+// 		next.ServeHTTP(w, r)
+// 	})
+// }

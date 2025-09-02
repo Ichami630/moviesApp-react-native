@@ -42,5 +42,8 @@ func (h *MessageHandler) WireHttpHandler() http.Handler {
 }
 
 func (h *MessageHandler) handleHealthcheck(c *gin.Context) {
-	c.String(http.StatusOK, "ok")
+	c.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"message": "welcome check",
+	})
 }
