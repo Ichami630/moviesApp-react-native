@@ -18,11 +18,11 @@ export default function Index() {
   ))
   return (
     <View className="flex-1 bg-primary">
-      <Image source={images.bg} className="absolute w-full z-0" />
+      <Image source={images.bg} className="absolute z-0 w-full" />
       <ScrollView className="flex-1 px-5" showsVerticalScrollIndicator={false} contentContainerStyle={{paddingBottom:10}}>
-        <Image source={icons.logo} className="w-12 h-10 mt-20 mb-5 mx-auto" />
+        <Image source={icons.logo} className="w-12 h-10 mx-auto mt-20 mb-5" />
         {moviesLoading ? (
-          <ActivityIndicator size="large" color="#0000ff" className="mt-10 self-center" />
+          <ActivityIndicator size="large" color="#0000ff" className="self-center mt-10" />
         ): moviesError ? (
           <Text>Error: {moviesError?.message}</Text>
         ):(
@@ -30,7 +30,7 @@ export default function Index() {
             {/* search bar */}
             <SearchBar placeholder="Search for movies" onPress={() => router.push("/search")} />
             <>
-              <Text className="text-white text-bold mt-5 mb-3 text-lg">Latest Movies</Text>
+              <Text className="mt-5 mb-3 text-lg text-white text-bold">Latest Movies</Text>
               <FlatList data={movies}
                 renderItem={({ item }) => (
                   <MoviesCard {...item}/>
@@ -43,7 +43,7 @@ export default function Index() {
                   paddingRight: 5,
                   marginBottom: 20
                 }}
-                className="mt-2 pb-32"
+                className="pb-32 mt-2"
                 scrollEnabled={false}
               />
             </>
