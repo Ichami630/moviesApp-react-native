@@ -21,7 +21,7 @@ const TrendingMovies = () => {
   return (
     <View className='my-5'>
         <Text className="mb-3 text-xl font-bold text-white">
-            Trending Movies
+            Trending Movies 🔥
         </Text>
         {trendingLoading ? (
             <ActivityIndicator size="large" color="#0000ff" className="my-5" />
