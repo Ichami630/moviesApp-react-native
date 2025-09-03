@@ -11,9 +11,8 @@ import {
   ActivityIndicator,
   FlatList,
   Image,
-  ScrollView,
   Text,
-  View,
+  View
 } from "react-native";
 
 export default function Index() {
@@ -50,50 +49,6 @@ export default function Index() {
   return (
     <View className="flex-1 bg-primary">
       <Image source={images.bg} className="absolute z-0 w-full" />
-
-      <ScrollView
-        className="flex-1 px-5"
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 20 }}
-      >
-        {/* Logo */}
-        <Image source={icons.logo} className="w-12 h-10 mx-auto mt-20 mb-5" />
-
-        {/* Search bar */}
-        <SearchBar
-          placeholder="Search for movies"
-          onPress={() => router.push("/search")}
-        />
-
-        {/* Trending movies */}
-        <Text className="mt-8 mb-3 text-xl font-bold text-white">
-          Trending Movies
-        </Text>
-        {trendingLoading ? (
-          <ActivityIndicator size="large" color="#0000ff" className="my-5" />
-        ) : trendingError ? (
-          <Text className="text-red-500">
-            Error loading trending movies: {trendingError.message}
-          </Text>
-        ) : (
-          <FlatList
-            data={trendingData}
-            renderItem={renderTrendingItem}
-            keyExtractor={(item) => item.movie_id.toString()}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            ListEmptyComponent={
-              !trendingLoading && !trendingError ? (
-                <Text className="text-center text-light-300">** No Trending Movies Yet **</Text>
-              ): null
-            }
-          />
-        )}
-
-        {/* Latest movies */}
-        <Text className="mt-8 mb-3 text-sm font-bold text-white">
-          Latest Movies
-        </Text>
         {moviesLoading ? (
           <ActivityIndicator size="large" color="#0000ff" className="my-5" />
         ) : moviesError ? (
@@ -116,7 +71,50 @@ export default function Index() {
             )}
             columnWrapperStyle={columnWrapper}
             className="pb-32 mt-2"
-            scrollEnabled={false}
+            contentContainerStyle={{ 
+              paddingHorizontal: 16, 
+              paddingTop: 20,     
+              paddingBottom: 20      
+            }}
+            ListHeaderComponent={
+              <>
+                {/* Logo */}
+                <Image source={icons.logo} className="w-12 h-10 mx-auto mt-20 mb-5" />
+                {/* Search bar */}
+                <SearchBar
+                  placeholder="Search for movies"
+                  onPress={() => router.push("/search")}
+                />
+                {/* Trending movies */}
+                <Text className="mt-8 mb-3 text-xl font-bold text-white">
+                  Trending Movies
+                </Text>
+                {trendingLoading ? (
+                  <ActivityIndicator size="large" color="#0000ff" className="my-5" />
+                ) : trendingError ? (
+                  <Text className="text-red-500">
+                    Error loading trending movies: {trendingError.message}
+                  </Text>
+                ) : (
+                  <FlatList
+                    data={trendingData}
+                    renderItem={renderTrendingItem}
+                    keyExtractor={(item) => item.movie_id.toString()}
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    ListEmptyComponent={
+                      !trendingLoading && !trendingError ? (
+                        <Text className="text-center text-light-300">** No Trending Movies Yet **</Text>
+                      ): null
+                    }
+                  />
+                )}
+                {/* Latest movies */}
+                <Text className="mt-8 mb-3 text-sm font-bold text-white">
+                  Latest Movies
+                </Text>
+              </>
+            }
             ListEmptyComponent={
               !moviesLoading && !moviesError ? (
                 <Text className="text-center text-light-300">** No Movies Available **</Text>
@@ -124,7 +122,6 @@ export default function Index() {
             }
           />
         )}
-      </ScrollView>
     </View>
   );
 }
