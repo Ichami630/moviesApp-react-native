@@ -37,6 +37,7 @@ func (h *MessageHandler) WireHttpHandler() http.Handler {
 	//routes
 	r.GET("//healthcheck", h.handleHealthcheck)
 	r.POST("/trendingmovies", MetricHandler.NewTrendingMovies)
+	r.GET("/trendingmovies", MetricHandler.GetTrendingMovies)
 
 	return r
 }

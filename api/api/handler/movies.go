@@ -56,3 +56,20 @@ func (h *MetricHandler) NewTrendingMovies(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"success": true})
 }
+
+func (h *MetricHandler) GetTrendingMovies(c *gin.Context) {
+	movies, err := h.store.Do().GetAllMetric(c)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"success": false,
+			"error":   err,
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"success":        true,
+		"trendingMovies": movies,
+	})
+
+}

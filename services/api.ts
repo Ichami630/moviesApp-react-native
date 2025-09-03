@@ -49,7 +49,7 @@ export const getTrendingMovies = async () => {
             headers: API_CONFIG.headers,
         });
         const data = await res.json();
-        return data;
+        return data.trendingMovies;
     } catch (error) {
         console.log(error)
     }
