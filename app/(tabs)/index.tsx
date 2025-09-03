@@ -15,7 +15,7 @@ export default function Index() {
         renderItem={null}
         ListHeaderComponent={
           <>
-          <View className="mt-4 mb-5">
+          <View className="mb-5">
             <TrendingCarousel />
           </View>
           <View className="px-4">

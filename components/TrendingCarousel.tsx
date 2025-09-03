@@ -18,15 +18,15 @@ const TrendingCarousel = () => {
     <Carousel
       loop
       width={width}
-      height={250}
+      height={300}
       autoPlay={true}
-      autoPlayInterval={3000}
+      autoPlayInterval={5000}
       data={trendingData}
       scrollAnimationDuration={800}
       renderItem={({ item }) => (
         <TouchableOpacity
           className="flex-1"
-          activeOpacity={0.8}
+          activeOpacity={0.4}
           onPress={() => router.push(`/movies/${item.movie_id}`)}
         >
           <ImageBackground
@@ -35,10 +35,10 @@ const TrendingCarousel = () => {
                 ? `https://image.tmdb.org/t/p/w500${item.poster_url}`
                 : "https://placehold.co/600x400/1a1a1a/ffffff.png",
             }}
-            style={{ flex: 1, justifyContent: "flex-end" }}
-            resizeMode="center"
+            className="justify-end flex-1"
+            resizeMode="cover"
           >
-            <View className="p-4 rounded-b-lg bg-black/40">
+            <View className="p-4 bg-black/40">
               <Text className="text-lg font-bold text-white" numberOfLines={1}>
                 {item.title}
               </Text>
