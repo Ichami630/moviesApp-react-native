@@ -2,8 +2,9 @@ import MoviesCard from '@/components/MoviesCard';
 import SearchBar from '@/components/SearchBar';
 import { icons } from '@/constants/icons';
 import { images } from '@/constants/images';
-import { createTrendingMovies, fetchMovies } from "@/services/api";
-import useFetch from "@/services/useFetch";
+import useFetch from '@/hooks/useFetch';
+import { fetchMovies } from '@/services/tmdb';
+import { createTrendingMovies } from '@/services/trending';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, Image, Text, View } from 'react-native';
 
@@ -49,7 +50,7 @@ const Search = () => {
       }
 
     }
-  },[movies,lastSavedId])
+  },[movies,lastSavedId,searchQuery])
   return (
     <View className='flex-1 bg-primary'>
       <Image source={images.bg} className='absolute z-0 flex-1 w-full' resizeMode='cover' />

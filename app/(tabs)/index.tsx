@@ -3,8 +3,9 @@ import SearchBar from "@/components/SearchBar";
 import TrendingCard from "@/components/TrendingCard";
 import { icons } from "@/constants/icons";
 import { images } from "@/constants/images";
-import { fetchMovies, getTrendingMovies } from "@/services/api";
-import useFetch from "@/services/useFetch";
+import useFetch from '@/hooks/useFetch';
+import { fetchMovies } from "@/services/tmdb";
+import { getTrendingMovies } from "@/services/trending";
 import { useRouter } from "expo-router";
 import { useCallback } from "react";
 import {
