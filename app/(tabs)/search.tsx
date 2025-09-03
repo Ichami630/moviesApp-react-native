@@ -2,7 +2,7 @@ import MoviesCard from '@/components/MoviesCard';
 import SearchBar from '@/components/SearchBar';
 import { icons } from '@/constants/icons';
 import { images } from '@/constants/images';
-import { fetchMovies } from "@/services/api";
+import { createTrendingMovies, fetchMovies } from "@/services/api";
 import useFetch from "@/services/useFetch";
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, Image, Text, View } from 'react-native';
@@ -27,9 +27,32 @@ const Search = () => {
     },500)
     return () => clearTimeout(timeoutId)
   },[searchQuery])
+
+  //track last save movie to avoid duplicate movie save
+  const [lastSavedId, setLastSavedId] = useState<string | null>(null)
+
+  //save the first returned result of the search to the trending movie
+  useEffect( ()=>{
+    if(movies && movies.length > 0){
+      const firstMovies = movies[0];
+
+      //only save if its a new search result
+      if(firstMovies.id.toString() !== lastSavedId){
+        createTrendingMovies({
+          search_term: searchQuery,
+          movie_id: firstMovies.id.toString(),
+          title: firstMovies.title,
+          count: 1, //backend will increment if it already exist
+          poster_url: firstMovies.poster_path
+        });
+        setLastSavedId(firstMovies.id.toString())
+      }
+
+    }
+  },[movies,lastSavedId])
   return (
     <View className='flex-1 bg-primary'>
-      <Image source={images.bg} className='flex-1 absolute w-full z-0' resizeMode='cover' />
+      <Image source={images.bg} className='absolute z-0 flex-1 w-full' resizeMode='cover' />
       <FlatList 
       data={movies} 
       renderItem={({item}) => <MoviesCard {...item} />}
@@ -44,7 +67,7 @@ const Search = () => {
       contentContainerStyle={{ paddingBottom: 100 }}
       ListHeaderComponent={
         <>
-          <View className='w-full flex-row justify-center mt-20'>
+          <View className='flex-row justify-center w-full mt-20'>
             <Image source={icons.logo} className='w-12 h-10' />
           </View>
           <View className='my-5'>
@@ -73,7 +96,7 @@ const Search = () => {
       }
       ListEmptyComponent={
         !loading && !error ? (
-          <View className='ml-10 px-5'>
+          <View className='px-5 ml-10'>
             <Text className='text-center text-gray-500'>
               {searchQuery.trim() ? 'No movies found': 'Search for a movies'}
             </Text>

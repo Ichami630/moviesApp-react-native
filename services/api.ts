@@ -28,7 +28,7 @@ export const fetchMovies = async ({query}: {query: string}) => {
     }
 }
 
-export const createTrendingMovies = async (movie: Movie) => {
+export const createTrendingMovies = async (movie: TrendingMovie) => {
     try {
         const res = await fetch(`${API_CONFIG.BASE_URL}/trendingmovies`,{
             method: 'POST',
