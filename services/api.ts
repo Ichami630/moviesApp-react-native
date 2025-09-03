@@ -28,12 +28,26 @@ export const fetchMovies = async ({query}: {query: string}) => {
     }
 }
 
-export const testApi = async () => {
+export const createTrendingMovies = async (movie: Movie) => {
     try {
-        const res = await fetch(`${API_CONFIG.BASE_URL}/healthcheck`,{
-            method: 'GET',
+        const res = await fetch(`${API_CONFIG.BASE_URL}/trendingmovies`,{
+            method: 'POST',
+            body: JSON.stringify(movie),
             headers: API_CONFIG.headers
         })
+        const data = await res.json();
+        return data;
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export const getTrendingMovies = async () => {
+    try {
+        const res = await fetch(`${API_CONFIG.BASE_URL}/gettrendingmovies`,{
+            method: "GET",
+            headers: API_CONFIG.headers,
+        });
         const data = await res.json();
         return data;
     } catch (error) {
