@@ -1,5 +1,5 @@
 import { Link } from 'expo-router'
-import React from 'react'
+import React, { memo } from 'react'
 import { Image, Text, TouchableOpacity, View } from 'react-native'
 
 const TrendingCard = ({movie,index}: TrendingCardProps) => {
@@ -26,5 +26,5 @@ const TrendingCard = ({movie,index}: TrendingCardProps) => {
     </Link>
   )
 }
-
-export default TrendingCard
+//ensures trendingcard only re-renders if props change
+export default memo(TrendingCard)

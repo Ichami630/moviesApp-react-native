@@ -6,6 +6,7 @@ import { images } from "@/constants/images";
 import { fetchMovies, getTrendingMovies } from "@/services/api";
 import useFetch from "@/services/useFetch";
 import { useRouter } from "expo-router";
+import { useCallback } from "react";
 import {
   ActivityIndicator,
   FlatList,
@@ -31,6 +32,20 @@ export default function Index() {
     loading: trendingLoading,
     error: trendingError,
   } = useFetch(() => getTrendingMovies());
+
+  // Memoized render function for FlatList items.
+  // Ensures the function reference stays stable between re-renders,
+  // so React.memo(TrendingCard),React.memo(moviecard) can prevent unnecessary re-renders.
+  const renderMovieItem = useCallback(
+    ({ item }: {item: Movie}) => <MoviesCard {...item} />,
+    []
+  );
+  const renderTrendingItem = useCallback(
+    ({ item, index }: { item: TrendingCardProps["movie"]; index: TrendingCardProps["index"] }) => (
+      <TrendingCard movie={item} index={index} />
+    ),
+    []
+  );
 
   return (
     <View className="flex-1 bg-primary">
@@ -63,9 +78,7 @@ export default function Index() {
         ) : (
           <FlatList
             data={trendingData}
-            renderItem={({ item, index }) => (
-              <TrendingCard movie={item} index={index} />
-            )}
+            renderItem={renderTrendingItem}
             keyExtractor={(item) => item.movie_id.toString()}
             horizontal
             showsHorizontalScrollIndicator={false}
@@ -90,15 +103,18 @@ export default function Index() {
         ) : (
           <FlatList
             data={movies}
-            renderItem={({ item }) => <MoviesCard {...item} />}
+            renderItem={renderMovieItem}
             keyExtractor={(item) => item.id.toString()}
             numColumns={3}
-            columnWrapperStyle={{
-              justifyContent: "flex-start",
-              gap: 20,
-              paddingRight: 5,
-              marginBottom: 10,
-            }}
+            initialNumToRender={12} //only render 12 item at start
+            getItemLayout={(data,index) => (
+              {
+                length: 120, //height of each row
+                offset: 120 * index,
+                index
+              }
+            )}
+            columnWrapperStyle={columnWrapper}
             className="pb-32 mt-2"
             scrollEnabled={false}
             ListEmptyComponent={
@@ -112,3 +128,10 @@ export default function Index() {
     </View>
   );
 }
+
+const columnWrapper = {
+  justifyContent: "flex-start" as "flex-start",
+  paddingRight: 5,
+  gap: 20,
+  marginBottom: 10,
+};
