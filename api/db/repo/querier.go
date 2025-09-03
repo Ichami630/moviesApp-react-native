@@ -10,7 +10,7 @@ import (
 
 type Querier interface {
 	CreateMetric(ctx context.Context, arg CreateMetricParams) (string, error)
-	GetAllMetric(ctx context.Context) ([]Metric, error)
+	GetAllMetric(ctx context.Context) ([]GetAllMetricRow, error)
 	GetMetricByTitle(ctx context.Context, title string) (Metric, error)
 	UpdateMetric(ctx context.Context, id string) error
 }

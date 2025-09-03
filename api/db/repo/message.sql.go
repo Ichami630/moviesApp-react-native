@@ -17,7 +17,7 @@ RETURNING id
 
 type CreateMetricParams struct {
 	SearchTerm string `json:"search_term"`
-	Count      *int32 `json:"count"`
+	Count      int32  `json:"count"`
 	PosterUrl  string `json:"poster_url"`
 	MovieID    string `json:"movie_id"`
 	Title      string `json:"title"`
@@ -37,29 +37,34 @@ func (q *Queries) CreateMetric(ctx context.Context, arg CreateMetricParams) (str
 }
 
 const getAllMetric = `-- name: GetAllMetric :many
-SELECT id, search_term, count, poster_url, movie_id, title, created_at, updated_at FROM metric
+SELECT search_term,movie_id,title,count,poster_url FROM metric
 ORDER BY count DESC
 LIMIT 5
 `
 
-func (q *Queries) GetAllMetric(ctx context.Context) ([]Metric, error) {
+type GetAllMetricRow struct {
+	SearchTerm string `json:"search_term"`
+	MovieID    string `json:"movie_id"`
+	Title      string `json:"title"`
+	Count      int32  `json:"count"`
+	PosterUrl  string `json:"poster_url"`
+}
+
+func (q *Queries) GetAllMetric(ctx context.Context) ([]GetAllMetricRow, error) {
 	rows, err := q.db.Query(ctx, getAllMetric)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	items := []Metric{}
+	items := []GetAllMetricRow{}
 	for rows.Next() {
-		var i Metric
+		var i GetAllMetricRow
 		if err := rows.Scan(
-			&i.ID,
 			&i.SearchTerm,
-			&i.Count,
-			&i.PosterUrl,
 			&i.MovieID,
 			&i.Title,
-			&i.CreatedAt,
-			&i.UpdatedAt,
+			&i.Count,
+			&i.PosterUrl,
 		); err != nil {
 			return nil, err
 		}

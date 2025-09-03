@@ -11,7 +11,7 @@ import (
 type Metric struct {
 	ID         string           `json:"id"`
 	SearchTerm string           `json:"search_term"`
-	Count      *int32           `json:"count"`
+	Count      int32            `json:"count"`
 	PosterUrl  string           `json:"poster_url"`
 	MovieID    string           `json:"movie_id"`
 	Title      string           `json:"title"`

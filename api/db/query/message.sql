@@ -11,6 +11,6 @@ WHERE id = $1;
 SELECT * FROM metric WHERE title = $1;
 
 -- name: GetAllMetric :many
-SELECT * FROM metric
+SELECT search_term,movie_id,title,count,poster_url FROM metric
 ORDER BY count DESC
 LIMIT 5;

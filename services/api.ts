@@ -44,7 +44,7 @@ export const createTrendingMovies = async (movie: TrendingMovie) => {
 
 export const getTrendingMovies = async () => {
     try {
-        const res = await fetch(`${API_CONFIG.BASE_URL}/gettrendingmovies`,{
+        const res = await fetch(`${API_CONFIG.BASE_URL}/trendingmovies`,{
             method: "GET",
             headers: API_CONFIG.headers,
         });
