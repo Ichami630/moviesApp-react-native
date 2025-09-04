@@ -9,9 +9,11 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import SaveMovies from "@/components/buttons/SaveMovies";
 import { icons } from "@/constants/icons";
 import useFetch from "@/hooks/useFetch";
 import { fetchMoviesDetails } from "@/services/tmdb";
+
 
 interface MovieInfoProps {
   label: string;
@@ -53,6 +55,8 @@ const Details = () => {
             className="w-full h-[550px]"
             resizeMode="stretch"
           />
+
+          {movie && <SaveMovies movie={movie} />}
 
           <TouchableOpacity className="absolute flex items-center justify-center bg-white rounded-full bottom-5 right-5 size-14">
             <Image
