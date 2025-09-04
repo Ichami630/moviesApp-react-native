@@ -26,7 +26,7 @@ const TrendingCarousel = () => {
       renderItem={({ item }) => (
         <TouchableOpacity
           className="flex-1"
-          activeOpacity={0.4}
+          activeOpacity={0.9}
           onPress={() => router.push(`/movies/${item.movie_id}`)}
         >
           <ImageBackground
@@ -36,6 +36,7 @@ const TrendingCarousel = () => {
                 : "https://placehold.co/600x400/1a1a1a/ffffff.png",
             }}
             className="justify-end flex-1"
+            style={{ height: 600 }}
             resizeMode="cover"
           >
             <View className="p-4 bg-black/40">

@@ -6,8 +6,9 @@ export default function RootLayout() {
   return( 
     <SafeAreaProvider>
       {/* <StatusBar hidden={true} /> */}
-      <StatusBar barStyle="light-content" hidden={true} />
+      <StatusBar  hidden={true} />
       <Stack>
+        <Stack.Screen name="index" options={{headerShown: false}} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="movies/[id]" options={{ headerShown: false }} />
       </Stack>

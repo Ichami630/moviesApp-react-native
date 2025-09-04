@@ -17,7 +17,7 @@ const TrendingCard = ({movie,index}: TrendingCardProps) => {
                 {movie.title}
             </Text>
             {/* Rank badge (index + 1) */}
-          <View className="absolute px-2 py-1 rounded-full bottom-14 left-1">
+          <View className="absolute z-10 px-2 py-1 rounded-full bottom-2 -left-4">
             <Text className="text-[48px] font-extrabold text-white">
               {index + 1}
             </Text>
