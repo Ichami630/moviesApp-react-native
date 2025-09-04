@@ -55,7 +55,6 @@ const Details = () => {
             className="w-full h-[550px]"
             resizeMode="stretch"
           />
-
           {movie && <SaveMovies movie={movie} />}
 
           <TouchableOpacity className="absolute flex items-center justify-center bg-white rounded-full bottom-5 right-5 size-14">
