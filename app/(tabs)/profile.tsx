@@ -1,22 +1,64 @@
-import { Ionicons } from '@expo/vector-icons'; // or react-native-vector-icons
-import React from 'react';
-import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import * as ImagePicker from 'expo-image-picker';
+import React, { useEffect, useState } from 'react';
+import { Image, Modal, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 
 const Profile = () => {
+  const [status, requestPermission] = ImagePicker.useCameraPermissions();
+  const [userProfile, setUserProfile] = useState<string | null>(null);
+  const [showSheet, setShowSheet] = useState(false);
+  const [showPreview, setShowPreview] = useState(false); // 👈 new state
+
+  useEffect(() => {
+    if (!status?.granted) {
+      requestPermission();
+    }
+  }, [status]);
+
+  const pickFromGallery = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ["images"],
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setUserProfile(result.assets[0].uri);
+    }
+    setShowSheet(false);
+  };
+
+  const takePhoto = async () => {
+    let result = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setUserProfile(result.assets[0].uri);
+    }
+    setShowSheet(false);
+  };
+
   return (
     <ScrollView className="flex-1 bg-primary">
       {/* Header / Avatar */}
       <View className="items-center mt-12">
         <View className="relative">
-          <Image
-            source={{ uri: "https://i.pravatar.cc/150?img=12" }}
-            className="border-2 border-white rounded-full w-28 h-28"
-          />
+          {/* 👇 Tap image to preview */}
+          <TouchableOpacity onPress={() => setShowPreview(true)}>
+            <Image
+              source={{ uri: userProfile || "https://i.pravatar.cc/150?img=12" }}
+              className="border-2 border-white rounded-full w-28 h-28"
+            />
+          </TouchableOpacity>
 
           {/* Camera Icon Overlay */}
           <TouchableOpacity
             className="absolute bottom-0 right-0 p-2 bg-gray-800 border border-white rounded-full"
-            onPress={() => console.log("Change profile picture")}
+            onPress={() => setShowSheet(true)}
           >
             <Ionicons name="camera" size={18} color="white" />
           </TouchableOpacity>
@@ -57,6 +99,64 @@ const Profile = () => {
           <Text className="text-base text-center text-white">Logout</Text>
         </TouchableOpacity>
       </View>
+
+      {/* bottom sheet modal */}
+      <Modal
+        transparent
+        visible={showSheet}
+        animationType="slide"
+        onRequestClose={() => setShowSheet(false)}
+      >
+        <TouchableOpacity
+          className="flex-1 bg-black/40"
+          activeOpacity={1}
+          onPressOut={() => setShowSheet(false)}
+        >
+          <View className="absolute bottom-0 w-full p-4 bg-white rounded-t-2xl">
+            <Text className="mb-4 text-lg font-semibold text-center">Profile Picture</Text>
+            <TouchableOpacity
+              className="p-4 mb-2 bg-gray-200 rounded-lg"
+              onPress={takePhoto}
+            >
+              <Text className="text-center text-black">📷 Take Photo</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              className="p-4 mb-2 bg-gray-200 rounded-lg"
+              onPress={pickFromGallery}
+            >
+              <Text className="text-center text-black">🖼 Choose from Gallery</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              className="p-4 bg-red-500 rounded-lg"
+              onPress={() => setShowSheet(false)}
+            >
+              <Text className="text-center text-white">Cancel</Text>
+            </TouchableOpacity>
+          </View>
+        </TouchableOpacity>
+      </Modal>
+
+      {/* Fullscreen Preview Modal */}
+      <Modal
+        visible={showPreview}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setShowPreview(false)}
+      >
+        <View className="items-center justify-center flex-1 bg-black">
+          <TouchableOpacity
+            style={{ position: "absolute", top: 40, right: 20 }}
+            onPress={() => setShowPreview(false)}
+          >
+            <Ionicons name="close" size={30} color="white" />
+          </TouchableOpacity>
+          <Image
+            source={{ uri: userProfile || "https://i.pravatar.cc/150?img=12" }}
+            className="w-80 h-80 rounded-xl"
+            resizeMode="contain"
+          />
+        </View>
+      </Modal>
     </ScrollView>
   );
 };
