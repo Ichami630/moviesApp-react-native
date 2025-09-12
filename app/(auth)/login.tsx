@@ -1,6 +1,7 @@
 import Input from '@/components/inputs/TextInput'
 import useMutation from '@/hooks/useMutation'
 import { SignIn } from '@/services/auth'
+import { saveToken } from '@/services/tokenStorage'
 import { Link, useRouter } from 'expo-router'
 import React, { useState } from 'react'
 import { ActivityIndicator, Alert, Text, TouchableOpacity, View } from 'react-native'
@@ -26,6 +27,8 @@ const Login = () => {
     try {
       const res = await loginUser(formData)
       if(res?.success){
+        //save token securely
+        await saveToken(res.accessToken, res.refreshToken)
         Alert.alert("Success", "login successfully")
         setTimeout(()=>{
           router.push("/(tabs)");

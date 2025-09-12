@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/Iknite-Space/c4-project-boilerplate/api/api/controllers"
+	"github.com/Iknite-Space/c4-project-boilerplate/api/api/middlewares"
 	"github.com/Iknite-Space/c4-project-boilerplate/api/db/store"
 	"github.com/gin-gonic/gin"
 )
@@ -35,8 +36,13 @@ func (h *Router) WireHttpHandler() http.Handler {
 	r.GET("//healthcheck", h.handleHealthcheck)
 	r.POST("/register", userCtrl.Register)
 	r.POST("/login", authCtrl.Login)
-	r.POST("/trendingmovies", movieCtrl.NewTrendingMovies)
-	r.GET("/trendingmovies", movieCtrl.GetTrendingMovies)
+	r.POST("/refresh", authCtrl.Refresh)
+
+	//protected routes
+	protected := r.Group("/")
+	protected.Use(middlewares.AuthMiddleware())
+	protected.POST("/trendingmovies", movieCtrl.NewTrendingMovies)
+	protected.GET("/trendingmovies", movieCtrl.GetTrendingMovies)
 
 	return r
 }

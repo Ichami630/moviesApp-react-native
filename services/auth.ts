@@ -5,7 +5,9 @@ export const Signup = async (user: User) => {
         const res = await fetch(`${API_CONFIG.BASE_URL}/register`,{
             method: "POST",
             body: JSON.stringify(user),
-            headers: API_CONFIG.headers
+            headers: {
+                accept: 'application/json',
+            }
         })
         const data = await res.json();
         return data;
@@ -19,7 +21,9 @@ export const SignIn = async (user: User) => {
         const res = await fetch(`${API_CONFIG.BASE_URL}/login`,{
             method: "POST",
             body: JSON.stringify(user),
-            headers: API_CONFIG.headers
+            headers: {
+                accept: 'application/json',
+            }
         })
         const data = await res.json();
         return data;
