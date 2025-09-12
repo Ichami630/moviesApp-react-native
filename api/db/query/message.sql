@@ -1,3 +1,10 @@
+-- name: CreateUser :exec
+INSERT INTO "user" (name, email, password)
+VALUES ($1, $2, $3);
+
+-- name: GetUserByEmail :one
+SELECT * FROM "user" WHERE email = $1;
+
 -- name: CreateMetric :one
 INSERT INTO metric (search_term,count,poster_url,movie_id,title)
 VALUES ($1,$2,$3,$4,$5)

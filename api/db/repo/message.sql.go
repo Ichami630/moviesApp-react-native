@@ -36,6 +36,22 @@ func (q *Queries) CreateMetric(ctx context.Context, arg CreateMetricParams) (str
 	return id, err
 }
 
+const createUser = `-- name: CreateUser :exec
+INSERT INTO "user" (name, email, password)
+VALUES ($1, $2, $3)
+`
+
+type CreateUserParams struct {
+	Name     string `json:"name"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
+func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) error {
+	_, err := q.db.Exec(ctx, createUser, arg.Name, arg.Email, arg.Password)
+	return err
+}
+
 const getAllMetric = `-- name: GetAllMetric :many
 SELECT search_term,movie_id,title,count,poster_url FROM metric
 ORDER BY count DESC
@@ -92,6 +108,23 @@ func (q *Queries) GetMetricByTitle(ctx context.Context, title string) (Metric, e
 		&i.Title,
 		&i.CreatedAt,
 		&i.UpdatedAt,
+	)
+	return i, err
+}
+
+const getUserByEmail = `-- name: GetUserByEmail :one
+SELECT id, name, email, password, created_at FROM "user" WHERE email = $1
+`
+
+func (q *Queries) GetUserByEmail(ctx context.Context, email string) (User, error) {
+	row := q.db.QueryRow(ctx, getUserByEmail, email)
+	var i User
+	err := row.Scan(
+		&i.ID,
+		&i.Name,
+		&i.Email,
+		&i.Password,
+		&i.CreatedAt,
 	)
 	return i, err
 }
