@@ -9,7 +9,7 @@ const SplashScreen = () => {
     //redirect the user to the home page after a 10 seconds
     useEffect(()=> {
         const timer = setTimeout(()=>{
-            router.replace("/(auth)/login")
+            router.replace("/(auth)/register")
         },3000)
         return () => clearTimeout(timer)
     },[router])

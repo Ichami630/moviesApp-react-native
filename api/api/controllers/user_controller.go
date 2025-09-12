@@ -24,13 +24,13 @@ func (h *UserController) Register(c *gin.Context) {
 	var req repo.CreateUserParams
 
 	if err := c.ShouldBindBodyWithJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
 	}
 	//hash the password
 	hashpwd, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "could not hash password"})
+		c.JSON(http.StatusInternalServerError, gin.H{"message": "could not hash password"})
 		return
 	}
 	//insert user's info to db
@@ -39,7 +39,7 @@ func (h *UserController) Register(c *gin.Context) {
 		Email:    req.Email,
 		Password: string(hashpwd),
 	}); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to create user"})
+		c.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to create user"})
 		return
 	}
 

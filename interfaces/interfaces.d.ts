@@ -83,3 +83,18 @@ interface SavedMoviesProps {
   release_date: string;
   vote_average: number;
 }
+
+interface TextInputProps {
+  label?: string;
+  placeholder?: string;
+  value: string;
+  onChangeText: (text: string) => void;
+  secureTextEntry?: boolean;
+  keyboardType?: "default" | "email-address" | "numeric" | "phone-pad";
+}
+
+interface User {
+  name: string;
+  email: string;
+  password: string;
+}
