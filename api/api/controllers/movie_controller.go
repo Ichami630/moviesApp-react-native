@@ -1,4 +1,4 @@
-package handler
+package controllers
 
 import (
 	"database/sql"
@@ -10,17 +10,18 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type MetricHandler struct {
+type MovieController struct {
 	store store.Store
 }
 
-func NewMetricHandler(store store.Store) *MetricHandler {
-	return &MetricHandler{
+// instance of the moviecontroller
+func NewMovieController(store store.Store) *MovieController {
+	return &MovieController{
 		store: store,
 	}
 }
 
-func (h *MetricHandler) NewTrendingMovies(c *gin.Context) {
+func (h *MovieController) NewTrendingMovies(c *gin.Context) {
 	var req repo.CreateMetricParams
 
 	if err := c.ShouldBindBodyWithJSON(&req); err != nil {
@@ -57,7 +58,7 @@ func (h *MetricHandler) NewTrendingMovies(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"success": true})
 }
 
-func (h *MetricHandler) GetTrendingMovies(c *gin.Context) {
+func (h *MovieController) GetTrendingMovies(c *gin.Context) {
 	movies, err := h.store.Do().GetAllMetric(c)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{

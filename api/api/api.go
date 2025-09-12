@@ -3,28 +3,22 @@ package api
 import (
 	"net/http"
 
-	"github.com/Iknite-Space/c4-project-boilerplate/api/api/handler"
+	"github.com/Iknite-Space/c4-project-boilerplate/api/api/controllers"
 	"github.com/Iknite-Space/c4-project-boilerplate/api/db/store"
-	"github.com/Iknite-Space/c4-project-boilerplate/api/service/campay"
-	"github.com/Iknite-Space/c4-project-boilerplate/api/service/cloudinary"
 	"github.com/gin-gonic/gin"
 )
 
-type MessageHandler struct {
-	store      store.Store
-	campay     *campay.Client
-	cloudinary *cloudinary.Client
+type Router struct {
+	store store.Store
 }
 
-func NewMessageHandler(store store.Store, campay *campay.Client, cloudinary *cloudinary.Client) *MessageHandler {
-	return &MessageHandler{
-		store:      store,
-		campay:     campay,
-		cloudinary: cloudinary,
+func NewRouter(store store.Store) *Router {
+	return &Router{
+		store: store,
 	}
 }
 
-func (h *MessageHandler) WireHttpHandler() http.Handler {
+func (h *Router) WireHttpHandler() http.Handler {
 
 	r := gin.Default()
 	r.Use(gin.CustomRecovery(func(c *gin.Context, _ any) {
@@ -32,17 +26,20 @@ func (h *MessageHandler) WireHttpHandler() http.Handler {
 		c.AbortWithStatus(http.StatusInternalServerError)
 	}))
 
-	MetricHandler := handler.NewMetricHandler(h.store)
+	//controllers
+	movieCtrl := controllers.NewMovieController(h.store)
+	userCtrl := controllers.NewUserController(h.store)
 
-	//routes
+	//public routes
 	r.GET("//healthcheck", h.handleHealthcheck)
-	r.POST("/trendingmovies", MetricHandler.NewTrendingMovies)
-	r.GET("/trendingmovies", MetricHandler.GetTrendingMovies)
+	r.POST("/register", userCtrl.Register)
+	r.POST("/trendingmovies", movieCtrl.NewTrendingMovies)
+	r.GET("/trendingmovies", movieCtrl.GetTrendingMovies)
 
 	return r
 }
 
-func (h *MessageHandler) handleHealthcheck(c *gin.Context) {
+func (h *Router) handleHealthcheck(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,
 		"message": "welcome check",

@@ -10,8 +10,10 @@ import (
 
 type Querier interface {
 	CreateMetric(ctx context.Context, arg CreateMetricParams) (string, error)
+	CreateUser(ctx context.Context, arg CreateUserParams) error
 	GetAllMetric(ctx context.Context) ([]GetAllMetricRow, error)
 	GetMetricByTitle(ctx context.Context, title string) (Metric, error)
+	GetUserByEmail(ctx context.Context, email string) (User, error)
 	UpdateMetric(ctx context.Context, id string) error
 }
 

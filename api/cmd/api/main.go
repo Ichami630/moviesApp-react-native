@@ -16,8 +16,6 @@ import (
 	"github.com/Iknite-Space/c4-project-boilerplate/api/api"
 	"github.com/Iknite-Space/c4-project-boilerplate/api/db/repo"
 	"github.com/Iknite-Space/c4-project-boilerplate/api/db/store"
-	"github.com/Iknite-Space/c4-project-boilerplate/api/service/campay"
-	"github.com/Iknite-Space/c4-project-boilerplate/api/service/cloudinary"
 )
 
 // DBConfig holds the database configuration. This struct is populated from the .env in the current directory.
@@ -80,11 +78,9 @@ func run() error {
 	}
 
 	querier := store.NewStore(db)
-	campay := campay.New("https://demo.campay.net/api", "74e673b7e942ee4f2f3c95d11ce6ed0ff3bd6ba7")
-	cloudinary := cloudinary.New("https://api.cloudinary.com/v1_1/" + config.Cloudinary_Cloud_Name)
 
 	// We create a new http handler using the database querier.
-	handler := api.NewMessageHandler(querier, campay, cloudinary).WireHttpHandler()
+	handler := api.NewRouter(querier).WireHttpHandler()
 
 	// Wrap the handler with CORS middleware
 	// handlerWithCORS := corsMiddleware(handler)
