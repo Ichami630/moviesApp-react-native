@@ -29,10 +29,12 @@ func (h *Router) WireHttpHandler() http.Handler {
 	//controllers
 	movieCtrl := controllers.NewMovieController(h.store)
 	userCtrl := controllers.NewUserController(h.store)
+	authCtrl := controllers.NewAuthController(h.store)
 
 	//public routes
 	r.GET("//healthcheck", h.handleHealthcheck)
 	r.POST("/register", userCtrl.Register)
+	r.POST("/login", authCtrl.Login)
 	r.POST("/trendingmovies", movieCtrl.NewTrendingMovies)
 	r.GET("/trendingmovies", movieCtrl.GetTrendingMovies)
 

@@ -1,7 +1,7 @@
 import Input from '@/components/inputs/TextInput'
 import useMutation from '@/hooks/useMutation'
 import { SignIn } from '@/services/auth'
-import { Link } from 'expo-router'
+import { Link, useRouter } from 'expo-router'
 import React, { useState } from 'react'
 import { ActivityIndicator, Alert, Text, TouchableOpacity, View } from 'react-native'
 
@@ -11,6 +11,7 @@ const Login = () => {
     email: '',
     password: ''
   })
+  const router = useRouter();
   
   const handleChange = (field: string, value: string) => {
     setFormData(prev => ({...prev,[field]:value}))
@@ -24,7 +25,12 @@ const Login = () => {
     }
     try {
       const res = await loginUser(formData)
-      if(res?.success) Alert.alert("Success", "login successfully")
+      if(res?.success){
+        Alert.alert("Success", "login successfully")
+        setTimeout(()=>{
+          router.push("/(tabs)");
+        },1500)
+      }else Alert.alert("Error", res?.message || "An unknown error occured, please try again");
     } catch (error) {
       console.log(error)
     }
