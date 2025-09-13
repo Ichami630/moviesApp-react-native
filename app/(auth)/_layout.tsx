@@ -1,12 +1,12 @@
 // app/(auth)/_layout.tsx
 import { Stack } from "expo-router";
-import { StyleSheet } from "react-native";
+// import { StyleSheet } from "react-native";
 
 export default function AuthLayout() {
   return (
     <Stack screenOptions={{ 
       headerShown: false,
-      contentStyle: styles.container
+      // contentStyle: styles.container
       }}>
       <Stack.Screen name="login" />
       <Stack.Screen name="register" />
@@ -15,11 +15,11 @@ export default function AuthLayout() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    paddingHorizontal: 30,
-    backgroundColor: "#030014"
-  }
-})
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     justifyContent: "center",
+//     paddingHorizontal: 30,
+//     backgroundColor: "#030014"
+//   }
+// })

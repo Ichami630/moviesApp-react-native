@@ -12,7 +12,7 @@ const AuthGate = () => {
         if(accessToken){
             router.replace("/(tabs)")
         }else{
-            router.replace("/(auth)/login")
+            router.replace("/(auth)")
         }
     }
   },[accessToken,loading,router])

@@ -42,6 +42,7 @@ const Login = () => {
     }
   }
   return (
+    <View className='justify-center flex-1 px-10 bg-primary'>
     <View className='p-4 bg-white rounded-lg'>
       <Text className="mb-6 text-2xl font-bold text-center">Login</Text>
       <Input placeholder="Email" value={formData.email} onChangeText={text => handleChange('email',text)} keyboardType="email-address" />
@@ -60,6 +61,7 @@ const Login = () => {
       <Text className="mt-2">
         Don{`'`}t Have an Account ? <Link className="underline text-accent" href={"/(auth)/register"}>signup</Link>
       </Text>
+    </View>
     </View>
   )
 }
