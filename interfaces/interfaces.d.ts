@@ -94,7 +94,17 @@ interface TextInputProps {
 }
 
 interface User {
+  id?: string;
   name?: string;
   email: string;
   password: string;
+}
+
+interface AuthContext {
+  user: User | null;
+  accessToken: string | null;
+  refreshToken: string | null;
+  loading: boolean;
+  login: (email: string, password: string) => Promise<boolean>;
+  logout: ()=>Promise<void>
 }

@@ -49,7 +49,7 @@ func (h *AuthController) Login(c *gin.Context) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"user_id": user.ID,
 		"email":   user.Email,
-		"exp":     time.Now().Add(time.Minute * 15).Unix(), // expires in 15 minutes
+		"exp":     time.Now().Add(time.Minute * 1).Unix(), // expires in 15 minutes
 	})
 	accessToken, _ := token.SignedString(jwtSecret)
 
@@ -61,9 +61,16 @@ func (h *AuthController) Login(c *gin.Context) {
 	})
 	refreshToken, _ := refresh.SignedString(jwtSecret)
 
+	loggedInUser := models.LoginUserResponse{
+		ID:       user.ID,
+		Name:     user.Name,
+		Email:    user.Email,
+		Password: req.Password,
+	}
+
 	c.JSON(http.StatusOK, gin.H{
 		"success":      true,
-		"user":         user,
+		"user":         loggedInUser,
 		"accessToken":  accessToken,
 		"refreshToken": refreshToken,
 	})
