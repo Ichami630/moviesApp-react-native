@@ -24,7 +24,8 @@ export const refreshAccessToken = async (): Promise<string | null> => {
 type JwtPayload = {
     exp: number;
 }
-export const isTokenExpired = (token: string): boolean => {
+export const isTokenExpired = (token: string | null): boolean => {
+    if(!token) return true;
     try {
         const {exp} = jwtDecode<JwtPayload>(token);
         if(!exp) return true;

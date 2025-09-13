@@ -1,5 +1,3 @@
-
-import { isTokenExpired, refreshAccessToken } from "./authServices";
 import { getAccessToken } from "./tokenStorage";
 
 export const TMDB_CONFIG = {
@@ -12,15 +10,8 @@ export const TMDB_CONFIG = {
 };
 
 //get the access token from securestore
-export const getAuthHeaders = async (logoutcallback?: ()=>void) => {
+export const getAuthHeaders = async () => {
     let token = await getAccessToken();
-    if(token && isTokenExpired(token)){
-        console.log("Token expired, refreshing...");
-        token = await refreshAccessToken();
-    }
-    if(!token && logoutcallback){
-        logoutcallback();
-    }
     return {
       accept: 'application/json',
       Authorization: token ? `Bearer ${token}` : '',

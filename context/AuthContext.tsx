@@ -1,4 +1,5 @@
 import { SignIn } from "@/services/auth";
+import { isTokenExpired, refreshAccessToken } from "@/services/authServices";
 import { clearUserInfo, getUserInfo } from "@/services/saved";
 import { clearTokens, getAccessToken, getRefreshToken, saveToken } from "@/services/tokenStorage";
 import { useRouter } from "expo-router";
@@ -19,15 +20,34 @@ export const AuthProvider = ({children}: {children: React.ReactNode}) => {
             const aToken = await getAccessToken();
             const rToken = await getRefreshToken();
             const userInfo = await getUserInfo()
-            if(aToken && rToken && userInfo) {
-                setAccessToken(aToken)
-                setrefreshToken(rToken)
-                setUser(userInfo)
+
+            let validAccessToken = aToken;
+            //check if access token is expired
+            if(isTokenExpired(aToken)){
+                console.log("Access token expired, refreshing..");
+                const newToken = await refreshAccessToken(); //get new access and refresh token, and return the access token
+                if(!newToken){
+                    //unable to get a new access token, log the user out
+                    await clearTokens(); //clear the access and refresh tokens
+                    await clearUserInfo(); //clear the user info
+                    setAccessToken(null)
+                    setrefreshToken(null)
+                    setUser(null)
+                    setTimeout(()=>{
+                        router.replace("/(auth)"); //redirect user to login page
+                    },500)
+                    return;
+                }
+                validAccessToken = newToken;
             }
+            //access token is valid
+            setAccessToken(validAccessToken)
+            setrefreshToken(rToken)
+            setUser(userInfo)
             setLoading(false);
         }
         load();
-    },[])
+    },[router])
 
     const login = async (email: string, password: string) => {
         try {
