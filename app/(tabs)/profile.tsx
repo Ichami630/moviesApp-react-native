@@ -1,19 +1,61 @@
+
+import { useAuth } from '@/context/AuthContext';
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
+import * as SMS from "expo-sms";
 import React, { useEffect, useState } from 'react';
-import { Image, Modal, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Image, Modal, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 
 const Profile = () => {
   const [status, requestPermission] = ImagePicker.useCameraPermissions();
   const [userProfile, setUserProfile] = useState<string | null>(null);
   const [showSheet, setShowSheet] = useState(false);
-  const [showPreview, setShowPreview] = useState(false); // 👈 new state
+  const [showPreview, setShowPreview] = useState(false); 
 
   useEffect(() => {
     if (!status?.granted) {
       requestPermission();
     }
   }, [status]);
+  const {user,logout,loading} = useAuth();
+
+  const handleLogout = async () => {
+    await logout()
+  }
+
+  const testapi = async () => {
+    try {
+      const res = await fetch("https://ssec.online/get_pending_sms.php", {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+  
+      const sms = await res.json();
+      if(!sms) return;
+      console.log(sms);
+
+      const isAvailable = await SMS.isAvailableAsync();
+      if(isAvailable) {
+        const result = await SMS.sendSMSAsync([sms.phone],sms.message);
+        console.log("sms send successfully",result);
+
+      // Update backend
+      await fetch("https://ssec.online/get_pending_sms.php", {
+        method: "POST",
+        body: new URLSearchParams({
+          id: sms.id,
+          status: result.result === "sent" ? "sent" : "failed",
+        }),
+      });
+      }else{
+        console.log("SMS not available on this device");
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  }
+  
+
 
   const pickFromGallery = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -41,7 +83,13 @@ const Profile = () => {
     }
     setShowSheet(false);
   };
-
+  if(loading) {
+    return (
+      <View className='items-center justify-center flex-1 bg-primary'>
+        <ActivityIndicator size={'large'}  />
+      </View>
+    )
+  }
   return (
     <ScrollView className="flex-1 bg-primary">
       {/* Header / Avatar */}
@@ -64,8 +112,8 @@ const Profile = () => {
           </TouchableOpacity>
         </View>
 
-        <Text className="mt-4 text-2xl font-bold text-white">Ichami Doe</Text>
-        <Text className="text-gray-300">ichamidoe@email.com</Text>
+        <Text className="mt-4 text-2xl font-bold text-white">{user?.name}</Text>
+        <Text className="text-gray-300">{user?.email}</Text>
       </View>
 
       {/* Stats */}
@@ -95,8 +143,11 @@ const Profile = () => {
         <TouchableOpacity className="p-4 bg-gray-800 rounded-xl">
           <Text className="text-base text-white">Help & Support</Text>
         </TouchableOpacity>
-        <TouchableOpacity className="p-4 bg-red-600 rounded-xl">
+        <TouchableOpacity className="p-4 bg-red-600 rounded-xl" onPress={handleLogout}>
           <Text className="text-base text-center text-white">Logout</Text>
+        </TouchableOpacity>
+        <TouchableOpacity className="p-4 bg-red-600 rounded-xl" onPress={testapi}>
+          <Text className="text-base text-center text-white">testapi</Text>
         </TouchableOpacity>
       </View>
 

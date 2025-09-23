@@ -1,47 +1,50 @@
 import Input from '@/components/inputs/TextInput'
-import useMutation from '@/hooks/useMutation'
-import { SignIn } from '@/services/auth'
-import { saveToken } from '@/services/tokenStorage'
+import { useAuth } from '@/context/AuthContext'
 import { Link, useRouter } from 'expo-router'
 import React, { useState } from 'react'
 import { ActivityIndicator, Alert, Text, TouchableOpacity, View } from 'react-native'
 
 const Login = () => {
-  const {mutate: loginUser, loading, error} = useMutation(SignIn)
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   })
+  const [loading, setLoading] = useState(false)
   const router = useRouter();
+  const {login} = useAuth()
   
   const handleChange = (field: string, value: string) => {
     setFormData(prev => ({...prev,[field]:value}))
   }
 
   const handleLogin = async () => {
+    setLoading(true)
     const {email, password} = formData
     if(!email || !password) {
       Alert.alert("Error", "Please fill all fields")
       return
     }
     try {
-      const res = await loginUser(formData)
-      if(res?.success){
-        //save token securely
-        await saveToken(res.accessToken, res.refreshToken)
-        Alert.alert("Success", "login successfully")
-        setTimeout(()=>{
+      const success = await login(email, password); 
+      if (success) {
+        Alert.alert("Success", "Login successfully");
+        setTimeout(() => {
           router.push("/(tabs)");
-        },1500)
-      }else Alert.alert("Error", res?.message || "An unknown error occured, please try again");
+        }, 500);
+      } else {
+        Alert.alert("Error", "Invalid credentials");
+      }
     } catch (error) {
-      console.log(error)
+      console.log(error);
+      Alert.alert("Error", "Something went wrong");
+    }finally{
+      setLoading(false)
     }
   }
   return (
+    <View className='justify-center flex-1 px-10 bg-primary'>
     <View className='p-4 bg-white rounded-lg'>
       <Text className="mb-6 text-2xl font-bold text-center">Login</Text>
-      {error && (<Text className="mb-2 text-center text-red-500">{error.message}</Text>)}
       <Input placeholder="Email" value={formData.email} onChangeText={text => handleChange('email',text)} keyboardType="email-address" />
       <Input placeholder="Password" value={formData.password} onChangeText={text => handleChange('password',text)} secureTextEntry />
       <TouchableOpacity
@@ -58,6 +61,7 @@ const Login = () => {
       <Text className="mt-2">
         Don{`'`}t Have an Account ? <Link className="underline text-accent" href={"/(auth)/register"}>signup</Link>
       </Text>
+    </View>
     </View>
   )
 }

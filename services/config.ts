@@ -11,12 +11,12 @@ export const TMDB_CONFIG = {
 
 //get the access token from securestore
 export const getAuthHeaders = async () => {
-    const token = await getAccessToken();
+    let token = await getAccessToken();
     return {
       accept: 'application/json',
       Authorization: token ? `Bearer ${token}` : '',
     };
   };
 export const API_CONFIG = {
-    BASE_URL: 'http://192.168.43.195:8085',
+    BASE_URL: 'https://moviesapp-u44p.onrender.com',
 };

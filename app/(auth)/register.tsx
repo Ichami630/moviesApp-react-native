@@ -40,6 +40,7 @@ const Register = () => {
 
 
   return (
+    <View className='justify-center flex-1 px-10 bg-primary'>
     <View className="p-4 bg-white rounded-lg">
       <Text className="mb-6 text-2xl font-bold text-center">Register</Text>
       {error && (<Text className="mb-2 text-center text-red-500">{error.message}</Text>)}
@@ -62,6 +63,7 @@ const Register = () => {
       <Text className="mt-2">
         Already Have an Account ? <Link className="underline text-accent" href={"/(auth)/login"}>login</Link>
       </Text>
+    </View>
     </View>
   );
 };

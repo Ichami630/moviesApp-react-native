@@ -1,4 +1,6 @@
+
 import { API_CONFIG, getAuthHeaders } from "./config";
+
 
 export const createTrendingMovies = async (movie: TrendingMovie) => {
     try {
