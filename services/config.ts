@@ -18,5 +18,5 @@ export const getAuthHeaders = async () => {
     };
   };
 export const API_CONFIG = {
-    BASE_URL: 'http://192.168.43.195:8085',
+    BASE_URL: 'https://moviesapp-u44p.onrender.com',
 };

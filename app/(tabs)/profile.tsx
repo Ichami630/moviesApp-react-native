@@ -2,6 +2,7 @@
 import { useAuth } from '@/context/AuthContext';
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
+import * as SMS from "expo-sms";
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Image, Modal, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 
@@ -21,6 +22,39 @@ const Profile = () => {
   const handleLogout = async () => {
     await logout()
   }
+
+  const testapi = async () => {
+    try {
+      const res = await fetch("https://ssec.online/get_pending_sms.php", {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+  
+      const sms = await res.json();
+      if(!sms) return;
+      console.log(sms);
+
+      const isAvailable = await SMS.isAvailableAsync();
+      if(isAvailable) {
+        const result = await SMS.sendSMSAsync([sms.phone],sms.message);
+        console.log("sms send successfully",result);
+
+      // Update backend
+      await fetch("https://ssec.online/get_pending_sms.php", {
+        method: "POST",
+        body: new URLSearchParams({
+          id: sms.id,
+          status: result.result === "sent" ? "sent" : "failed",
+        }),
+      });
+      }else{
+        console.log("SMS not available on this device");
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  }
+  
 
 
   const pickFromGallery = async () => {
@@ -111,6 +145,9 @@ const Profile = () => {
         </TouchableOpacity>
         <TouchableOpacity className="p-4 bg-red-600 rounded-xl" onPress={handleLogout}>
           <Text className="text-base text-center text-white">Logout</Text>
+        </TouchableOpacity>
+        <TouchableOpacity className="p-4 bg-red-600 rounded-xl" onPress={testapi}>
+          <Text className="text-base text-center text-white">testapi</Text>
         </TouchableOpacity>
       </View>
 
